@@ -1333,3 +1333,10 @@ const u8 gText_Receive[] = _("RECEIVE");
 const u8 gText_Send[] = _("SEND");
 const u8 gText_Toss[] = _("TOSS");
 const u8 gText_DelAllCancelOk[] = _("DEL. ALL{CLEAR_TO 0x57}CANCEL{CLEAR_TO 0xA4}OK");
+
+const u8 gText_LinkStandby2[] = _("Link standby…\n… … B Button: Cancel");
+const u8 gText_EventSafelyLoaded[] = _("The event was safely loaded.");
+const u8 gText_LoadErrorEndingSession[] = _("Loading error.\nEnding session.");
+const u8 gText_PressAToLoadEvent[] = _("Press the A Button to load event.\n… … B Button: Cancel");
+const u8 gText_LoadingEvent[] = _("Loading event…");
+const u8 gText_DontRemoveCableTurnOff[] = _("Don't remove the Game Link cable.\nDon't turn off the power.");

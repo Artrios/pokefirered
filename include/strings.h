@@ -1380,6 +1380,13 @@ extern const u8 gText_Interview[];
 extern const u8 gText_Questionnaire[];
 extern const u8 gText_DelAllCancelOk[];
 
+extern const u8 gText_LinkStandby2[];
+extern const u8 gText_EventSafelyLoaded[];
+extern const u8 gText_LoadErrorEndingSession[];
+extern const u8 gText_PressAToLoadEvent[];
+extern const u8 gText_LoadingEvent[];
+extern const u8 gText_DontRemoveCableTurnOff[];
+
 // naming_screen
 extern const u8 gText_MoveOkBack[];
 extern const u8 gText_AlphabetUpperLower[];

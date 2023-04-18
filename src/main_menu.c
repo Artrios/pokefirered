@@ -9,6 +9,7 @@
 #include "oak_speech.h"
 #include "overworld.h"
 #include "quest_log.h"
+#include "mystery_event_menu.h"
 #include "mystery_gift_menu.h"
 #include "strings.h"
 #include "title_screen.h"
@@ -22,7 +23,9 @@ enum MainMenuType
 {
     MAIN_MENU_NEWGAME = 0,
     MAIN_MENU_CONTINUE,
-    MAIN_MENU_MYSTERYGIFT
+    MAIN_MENU_MYSTERYGIFT,
+    MAIN_MENU_MYSTERY_EVENTS,
+    ACTION_INVALID
 };
 
 enum MainMenuWindow
@@ -31,6 +34,7 @@ enum MainMenuWindow
     MAIN_MENU_WINDOW_CONTINUE,
     MAIN_MENU_WINDOW_NEWGAME,
     MAIN_MENU_WINDOW_MYSTERYGIFT,
+    MAIN_MENU_WINDOW_MYSTERYEVENT,
     MAIN_MENU_WINDOW_ERROR,
     MAIN_MENU_WINDOW_COUNT
 };
@@ -107,6 +111,15 @@ static const struct WindowTemplate sWindowTemplate[] = {
         .height = 2,
         .paletteNum = 15,
         .baseBlock = 0x121
+    },
+    [MAIN_MENU_WINDOW_MYSTERYEVENT] = {
+        .bg = 0,
+        .tilemapLeft = 3,
+        .tilemapTop = 21,
+        .width = 24,
+        .height = 2,
+        .paletteNum = 15,
+        .baseBlock = 0x155
     }, 
     [MAIN_MENU_WINDOW_ERROR] = {
         .bg = 0,
@@ -136,7 +149,7 @@ static const struct BgTemplate sBgTemplate[] = {
     }
 };
 
-static const u8 sMenuCursorYMax[] = { 0, 1, 2 };
+static const u8 sMenuCursorYMax[] = { 0, 1, 3 };
 
 static void CB2_MainMenu(void)
 {
@@ -371,20 +384,25 @@ static void Task_PrintMainMenuText(u8 taskId)
         FillWindowPixelBuffer(MAIN_MENU_WINDOW_CONTINUE, PIXEL_FILL(10));
         FillWindowPixelBuffer(MAIN_MENU_WINDOW_NEWGAME, PIXEL_FILL(10));
         FillWindowPixelBuffer(MAIN_MENU_WINDOW_MYSTERYGIFT, PIXEL_FILL(10));
+        FillWindowPixelBuffer(MAIN_MENU_WINDOW_MYSTERYEVENT, PIXEL_FILL(10));
         AddTextPrinterParameterized3(MAIN_MENU_WINDOW_CONTINUE, FONT_NORMAL, 2, 2, sTextColor1, -1, gText_Continue);
         AddTextPrinterParameterized3(MAIN_MENU_WINDOW_NEWGAME, FONT_NORMAL, 2, 2, sTextColor1, -1, gText_NewGame);
         gTasks[taskId].tMGErrorType = 1;
         AddTextPrinterParameterized3(MAIN_MENU_WINDOW_MYSTERYGIFT, FONT_NORMAL, 2, 2, sTextColor1, -1, gText_MysteryGift);
+        AddTextPrinterParameterized3(MAIN_MENU_WINDOW_MYSTERYEVENT, FONT_NORMAL, 2, 2, sTextColor1, -1, gText_MysteryGift);
         PrintContinueStats();
         MainMenu_DrawWindow(&sWindowTemplate[MAIN_MENU_WINDOW_CONTINUE]);
         MainMenu_DrawWindow(&sWindowTemplate[MAIN_MENU_WINDOW_NEWGAME]);
         MainMenu_DrawWindow(&sWindowTemplate[MAIN_MENU_WINDOW_MYSTERYGIFT]);
+        MainMenu_DrawWindow(&sWindowTemplate[MAIN_MENU_WINDOW_MYSTERYEVENT]);
         PutWindowTilemap(MAIN_MENU_WINDOW_CONTINUE);
         PutWindowTilemap(MAIN_MENU_WINDOW_NEWGAME);
         PutWindowTilemap(MAIN_MENU_WINDOW_MYSTERYGIFT);
+        PutWindowTilemap(MAIN_MENU_WINDOW_MYSTERYEVENT);
         CopyWindowToVram(MAIN_MENU_WINDOW_CONTINUE, COPYWIN_GFX);
         CopyWindowToVram(MAIN_MENU_WINDOW_NEWGAME, COPYWIN_GFX);
         CopyWindowToVram(MAIN_MENU_WINDOW_MYSTERYGIFT, COPYWIN_FULL);
+        CopyWindowToVram(MAIN_MENU_WINDOW_MYSTERYEVENT, COPYWIN_FULL);
         break;
     }
     gTasks[taskId].func = Task_WaitDma3AndFadeIn;
@@ -461,6 +479,17 @@ static void Task_ExecuteMainMenuSelection(u8 taskId)
                     menuAction = MAIN_MENU_MYSTERYGIFT;
                 }
                 break;
+            case 3:
+                if (IsWirelessAdapterConnected())
+                {
+                    menuAction = ACTION_INVALID;
+                    gTasks[taskId].tMenuType = MAIN_MENU_MYSTERYGIFT;
+                }
+                else
+                {
+                    menuAction = MAIN_MENU_MYSTERY_EVENTS;
+                }
+                break;
             }
             break;
         }
@@ -486,6 +515,23 @@ static void Task_ExecuteMainMenuSelection(u8 taskId)
             FreeAllWindowBuffers();
             DestroyTask(taskId);
             break;
+        case MAIN_MENU_MYSTERY_EVENTS:
+            SetMainCallback2(CB2_InitMysteryEventMenu);
+            DestroyTask(taskId);
+            break;
+        case ACTION_INVALID:
+            gTasks[taskId].tMGErrorMsgState = 0;
+            gTasks[taskId].func = Task_MysteryGiftError;
+            gPlttBufferUnfaded[0xF1] = RGB_WHITE;
+            gPlttBufferFaded[0xF1] = RGB_WHITE;
+            SetGpuReg(REG_OFFSET_BG2HOFS, 0);
+            SetGpuReg(REG_OFFSET_BG2VOFS, 0);
+            SetGpuReg(REG_OFFSET_BG1HOFS, 0);
+            SetGpuReg(REG_OFFSET_BG1VOFS, 0);
+            SetGpuReg(REG_OFFSET_BG0HOFS, 0);
+            SetGpuReg(REG_OFFSET_BG0VOFS, 0);
+            BeginNormalPaletteFade(PALETTES_ALL, 0, 16, 0, RGB_BLACK);
+            return;
         }
     }
 }
@@ -558,6 +604,10 @@ static void MoveWindowByMenuTypeAndCursorPos(u8 menuType, u8 cursorPos)
         case 2: // MYSTERY GIFT
             win0vTop = 0x80 << 8;
             win0vBot = 0xA0;
+            break;
+        case 3: // MYSTERY EVENT
+            win0vTop = 0xA0 << 8;
+            win0vBot = 0xC0;
             break;
         }
         break;

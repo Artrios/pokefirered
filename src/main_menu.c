@@ -24,7 +24,8 @@ enum MainMenuType
     MAIN_MENU_NEWGAME = 0,
     MAIN_MENU_CONTINUE,
     MAIN_MENU_MYSTERYGIFT,
-    MAIN_MENU_MYSTERY_EVENTS,
+    MAIN_MENU_MYSTERYGIFTEREADER,
+    MAIN_MENU_MYSTERYEVENT,
     ACTION_INVALID
 };
 
@@ -469,10 +470,7 @@ static void Task_ExecuteMainMenuSelection(u8 taskId)
             case 2:
                 if (!IsWirelessAdapterConnected())
                 {
-                    SetStdFrame0OnBg(0);
-                    gTasks[taskId].func = Task_MysteryGiftError;
-                    BeginNormalPaletteFade(PALETTES_ALL, 0, 16, 0, RGB_BLACK);
-                    return;
+                    menuAction = MAIN_MENU_MYSTERYGIFTEREADER;
                 }
                 else
                 {
@@ -487,7 +485,7 @@ static void Task_ExecuteMainMenuSelection(u8 taskId)
                 }
                 else
                 {
-                    menuAction = MAIN_MENU_MYSTERY_EVENTS;
+                    menuAction = MAIN_MENU_MYSTERYEVENT;
                 }
                 break;
             }
@@ -515,7 +513,13 @@ static void Task_ExecuteMainMenuSelection(u8 taskId)
             FreeAllWindowBuffers();
             DestroyTask(taskId);
             break;
-        case MAIN_MENU_MYSTERY_EVENTS:
+        case MAIN_MENU_MYSTERYGIFTEREADER:
+            SetMainCallback2(CB2_InitEReader);
+            HelpSystem_Disable();
+            FreeAllWindowBuffers();
+            DestroyTask(taskId);
+            break;
+        case MAIN_MENU_MYSTERYEVENT:
             SetMainCallback2(CB2_InitMysteryEventMenu);
             DestroyTask(taskId);
             break;

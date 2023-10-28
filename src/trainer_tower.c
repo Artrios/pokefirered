@@ -526,7 +526,7 @@ static void SetUpTrainerTowerDataStruct(void)
         struct TrainerTowerState * ttstate_p = sTrainerTowerState;
         const struct EReaderTrainerTowerSetSubstruct * header_p = &gTrainerTowerLocalHeader;
         memcpy(&ttstate_p->data, header_p, sizeof(struct EReaderTrainerTowerSetSubstruct));
-        floors_p = gTrainerTowerFloors[challengeType];
+        floors_p = gTrainerTowerFloors[CHALLENGE_TYPE_JP];
         for (i = 0; i < MAX_TRAINER_TOWER_FLOORS; i++)
         {
             *(sTrainerTowerState->data.floors + i) = *(floors_p[i]); // manual pointer arithmetic needed to match

@@ -756,3 +756,24 @@ void BlitMoveInfoIcon(u8 windowId, u8 iconId, u16 x, u16 y)
 {
     BlitBitmapRectToWindow(windowId, gFireRedMenuElements_Gfx + gMoveMenuInfoIcons[iconId].offset * 32, 0, 0, 128, 128, x, y, gMoveMenuInfoIcons[iconId].width, gMoveMenuInfoIcons[iconId].height);
 }
+
+#define tIsScrolled data[15]
+
+void Task_ScrollIndicatorArrowPairOnMainMenu(u8 taskId)
+{
+    s16 *data = gTasks[taskId].data;
+    struct ScrollIndicatorPair *scrollData = (void*) data;
+
+    if (tIsScrolled)
+    {
+        gSprites[scrollData->topSpriteId].invisible = FALSE;
+        gSprites[scrollData->bottomSpriteId].invisible = TRUE;
+    }
+    else
+    {
+        gSprites[scrollData->topSpriteId].invisible = TRUE;
+        gSprites[scrollData->bottomSpriteId].invisible = FALSE;
+    }
+}
+
+#undef tIsScrolled

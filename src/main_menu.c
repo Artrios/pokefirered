@@ -21,11 +21,11 @@
 
 enum MainMenuType
 {
-    MAIN_MENU_NEWGAME = 0,
-    MAIN_MENU_CONTINUE,
-    MAIN_MENU_MYSTERYGIFT,
-    MAIN_MENU_MYSTERYGIFTEREADER,
-    MAIN_MENU_MYSTERYEVENT,
+    MAIN_MENU_NEWGAME = 0, //NEW GAME, OPTION
+    MAIN_MENU_CONTINUE, //CONTINUE, NEW GAME, OPTION
+    MAIN_MENU_MYSTERY_GIFT, //CONTINUE, NEW GAME, MYSTERY GIFT, OPTION
+    MAIN_MENU_MYSTERY_EVENTS, //CONTINUE, NEW GAME, MYSTERY EVENTS, OPTION
+    MAIN_MENU_MYSTERY_GIFT_AND_EVENTS, //CONTINUE, NEW GAME, MYSTERY GIFT, MYSTERY EVENTS, OPTION
     ACTION_INVALID
 };
 
@@ -46,6 +46,13 @@ enum MainMenuWindow
 #define tUnused8         data[8]
 #define tMGErrorMsgState data[9]
 #define tMGErrorType     data[10]
+#define tItemCount data[12]
+#define tScrollArrowTaskId data[13]
+#define tIsScrolled data[14]
+#define tWirelessAdapterConnected data[15]
+#define tArrowTaskIsScrolled data[15]   // For scroll indicator arrow task
+
+static EWRAM_DATA u16 sCurrItemAndOptionMenuCheck = 0;
 
 static bool32 MainMenuGpuInit(u8 a0);
 static void Task_SetWin0BldRegsAndCheckSaveFile(u8 taskId);
@@ -152,6 +159,8 @@ static const struct BgTemplate sBgTemplate[] = {
 
 static const u8 sMenuCursorYMax[] = { 0, 1, 3 };
 
+static const struct ScrollArrowsTemplate sScrollArrowsTemplate_MainMenu = {2, 0x78, 8, 3, 0x78, 0x98, 3, 4, 1, 1, 0};
+
 static void CB2_MainMenu(void)
 {
     RunTasks();
@@ -243,17 +252,33 @@ static void Task_SetWin0BldRegsAndCheckSaveFile(u8 taskId)
         SetGpuReg(REG_OFFSET_BLDCNT, BLDCNT_TGT1_BG0 | BLDCNT_TGT1_BG1 | BLDCNT_TGT1_BG2 | BLDCNT_TGT1_BG3 | BLDCNT_TGT1_OBJ | BLDCNT_TGT1_BD | BLDCNT_EFFECT_DARKEN);
         SetGpuReg(REG_OFFSET_BLDALPHA, BLDALPHA_BLEND(0, 0));
         SetGpuReg(REG_OFFSET_BLDY, 7);
+        if (IsWirelessAdapterConnected())
+            tWirelessAdapterConnected = TRUE;
         switch (gSaveFileStatus)
         {
         case SAVE_STATUS_OK:
             LoadUserFrameToBg(0);
-            if (IsMysteryGiftEnabled() == TRUE)
+            if (tWirelessAdapterConnected)
             {
-                gTasks[taskId].tMenuType = MAIN_MENU_MYSTERYGIFT;
+                if (IsMysteryGiftEnabled() == TRUE)
+                {
+                    gTasks[taskId].tMenuType = MAIN_MENU_MYSTERY_GIFT;
+                }
+                else
+                {
+                    gTasks[taskId].tMenuType = MAIN_MENU_CONTINUE;
+                }
             }
             else
             {
-                gTasks[taskId].tMenuType = MAIN_MENU_CONTINUE;
+                if (IsMysteryGiftEnabled() && !IsMysteryEventEnabled())
+                    gTasks[taskId].tMenuType == MAIN_MENU_MYSTERY_GIFT;
+                else if (!IsMysteryGiftEnabled() && IsMysteryEventEnabled())
+                    gTasks[taskId].tMenuType = MAIN_MENU_MYSTERY_EVENTS;
+                else if (IsMysteryGiftEnabled() && IsMysteryEventEnabled())
+                    gTasks[taskId].tMenuType = MAIN_MENU_MYSTERY_GIFT_AND_EVENTS;
+                else
+                    gTasks[taskId].tMenuType = MAIN_MENU_CONTINUE;
             }
             gTasks[taskId].func = Task_SetWin0BldRegsNoSaveFileCheck;
             break;
@@ -266,13 +291,27 @@ static void Task_SetWin0BldRegsAndCheckSaveFile(u8 taskId)
             SetStdFrame0OnBg(0);
             gTasks[taskId].tMenuType = MAIN_MENU_CONTINUE;
             PrintSaveErrorStatus(taskId, gText_SaveFileCorrupted);
-            if (IsMysteryGiftEnabled() == TRUE)
+            if (tWirelessAdapterConnected)
             {
-                gTasks[taskId].tMenuType = MAIN_MENU_MYSTERYGIFT;
+                if (IsMysteryGiftEnabled() == TRUE)
+                {
+                    gTasks[taskId].tMenuType = MAIN_MENU_MYSTERY_GIFT;
+                }
+                else
+                {
+                    gTasks[taskId].tMenuType = MAIN_MENU_CONTINUE;
+                }
             }
             else
             {
-                gTasks[taskId].tMenuType = MAIN_MENU_CONTINUE;
+                if (IsMysteryGiftEnabled() && !IsMysteryEventEnabled())
+                    gTasks[taskId].tMenuType == MAIN_MENU_MYSTERY_GIFT;
+                else if (!IsMysteryGiftEnabled() && IsMysteryEventEnabled())
+                    gTasks[taskId].tMenuType = MAIN_MENU_MYSTERY_EVENTS;
+                else if (IsMysteryGiftEnabled() && IsMysteryEventEnabled())
+                    gTasks[taskId].tMenuType = MAIN_MENU_MYSTERY_GIFT_AND_EVENTS;
+                else
+                    gTasks[taskId].tMenuType = MAIN_MENU_CONTINUE;
             }
             break;
         case SAVE_STATUS_EMPTY:
@@ -381,7 +420,43 @@ static void Task_PrintMainMenuText(u8 taskId)
         CopyWindowToVram(MAIN_MENU_WINDOW_CONTINUE, COPYWIN_GFX);
         CopyWindowToVram(MAIN_MENU_WINDOW_NEWGAME, COPYWIN_FULL);
         break;
-    case MAIN_MENU_MYSTERYGIFT:
+    case MAIN_MENU_MYSTERY_GIFT:
+        FillWindowPixelBuffer(MAIN_MENU_WINDOW_CONTINUE, PIXEL_FILL(10));
+        FillWindowPixelBuffer(MAIN_MENU_WINDOW_NEWGAME, PIXEL_FILL(10));
+        FillWindowPixelBuffer(MAIN_MENU_WINDOW_MYSTERYGIFT, PIXEL_FILL(10));
+        AddTextPrinterParameterized3(MAIN_MENU_WINDOW_CONTINUE, FONT_NORMAL, 2, 2, sTextColor1, -1, gText_Continue);
+        AddTextPrinterParameterized3(MAIN_MENU_WINDOW_NEWGAME, FONT_NORMAL, 2, 2, sTextColor1, -1, gText_NewGame);
+        gTasks[taskId].tMGErrorType = 1;
+        AddTextPrinterParameterized3(MAIN_MENU_WINDOW_MYSTERYGIFT, FONT_NORMAL, 2, 2, sTextColor1, -1, gText_MysteryGift);
+        PrintContinueStats();
+        MainMenu_DrawWindow(&sWindowTemplate[MAIN_MENU_WINDOW_CONTINUE]);
+        MainMenu_DrawWindow(&sWindowTemplate[MAIN_MENU_WINDOW_NEWGAME]);
+        MainMenu_DrawWindow(&sWindowTemplate[MAIN_MENU_WINDOW_MYSTERYGIFT]);
+        PutWindowTilemap(MAIN_MENU_WINDOW_CONTINUE);
+        PutWindowTilemap(MAIN_MENU_WINDOW_NEWGAME);
+        PutWindowTilemap(MAIN_MENU_WINDOW_MYSTERYGIFT);
+        CopyWindowToVram(MAIN_MENU_WINDOW_CONTINUE, COPYWIN_GFX);
+        CopyWindowToVram(MAIN_MENU_WINDOW_NEWGAME, COPYWIN_GFX);
+        CopyWindowToVram(MAIN_MENU_WINDOW_MYSTERYGIFT, COPYWIN_FULL);
+    case MAIN_MENU_MYSTERY_EVENTS:
+        FillWindowPixelBuffer(MAIN_MENU_WINDOW_CONTINUE, PIXEL_FILL(10));
+        FillWindowPixelBuffer(MAIN_MENU_WINDOW_NEWGAME, PIXEL_FILL(10));
+        FillWindowPixelBuffer(3, PIXEL_FILL(10));
+        AddTextPrinterParameterized3(MAIN_MENU_WINDOW_CONTINUE, FONT_NORMAL, 2, 2, sTextColor1, -1, gText_Continue);
+        AddTextPrinterParameterized3(MAIN_MENU_WINDOW_NEWGAME, FONT_NORMAL, 2, 2, sTextColor1, -1, gText_NewGame);
+        gTasks[taskId].tMGErrorType = 1;
+        AddTextPrinterParameterized3(3, FONT_NORMAL, 2, 2, sTextColor1, -1, gText_MysteryEvent);
+        PrintContinueStats();
+        MainMenu_DrawWindow(&sWindowTemplate[MAIN_MENU_WINDOW_CONTINUE]);
+        MainMenu_DrawWindow(&sWindowTemplate[MAIN_MENU_WINDOW_NEWGAME]);
+        MainMenu_DrawWindow(&sWindowTemplate[3]);
+        PutWindowTilemap(MAIN_MENU_WINDOW_CONTINUE);
+        PutWindowTilemap(MAIN_MENU_WINDOW_NEWGAME);
+        PutWindowTilemap(3);
+        CopyWindowToVram(MAIN_MENU_WINDOW_CONTINUE, COPYWIN_GFX);
+        CopyWindowToVram(MAIN_MENU_WINDOW_NEWGAME, COPYWIN_GFX);
+        CopyWindowToVram(3, COPYWIN_FULL);
+    case MAIN_MENU_MYSTERY_GIFT_AND_EVENTS:
         FillWindowPixelBuffer(MAIN_MENU_WINDOW_CONTINUE, PIXEL_FILL(10));
         FillWindowPixelBuffer(MAIN_MENU_WINDOW_NEWGAME, PIXEL_FILL(10));
         FillWindowPixelBuffer(MAIN_MENU_WINDOW_MYSTERYGIFT, PIXEL_FILL(10));
@@ -390,7 +465,7 @@ static void Task_PrintMainMenuText(u8 taskId)
         AddTextPrinterParameterized3(MAIN_MENU_WINDOW_NEWGAME, FONT_NORMAL, 2, 2, sTextColor1, -1, gText_NewGame);
         gTasks[taskId].tMGErrorType = 1;
         AddTextPrinterParameterized3(MAIN_MENU_WINDOW_MYSTERYGIFT, FONT_NORMAL, 2, 2, sTextColor1, -1, gText_MysteryGift);
-        AddTextPrinterParameterized3(MAIN_MENU_WINDOW_MYSTERYEVENT, FONT_NORMAL, 2, 2, sTextColor1, -1, gText_MysteryGift);
+        AddTextPrinterParameterized3(MAIN_MENU_WINDOW_MYSTERYEVENT, FONT_NORMAL, 2, 2, sTextColor1, -1, gText_MysteryEvent);
         PrintContinueStats();
         MainMenu_DrawWindow(&sWindowTemplate[MAIN_MENU_WINDOW_CONTINUE]);
         MainMenu_DrawWindow(&sWindowTemplate[MAIN_MENU_WINDOW_NEWGAME]);
@@ -404,6 +479,15 @@ static void Task_PrintMainMenuText(u8 taskId)
         CopyWindowToVram(MAIN_MENU_WINDOW_NEWGAME, COPYWIN_GFX);
         CopyWindowToVram(MAIN_MENU_WINDOW_MYSTERYGIFT, COPYWIN_FULL);
         CopyWindowToVram(MAIN_MENU_WINDOW_MYSTERYEVENT, COPYWIN_FULL);
+        tScrollArrowTaskId = AddScrollIndicatorArrowPair(&sScrollArrowsTemplate_MainMenu, &sCurrItemAndOptionMenuCheck);
+        gTasks[tScrollArrowTaskId].func = Task_ScrollIndicatorArrowPairOnMainMenu;
+        if (sCurrItemAndOptionMenuCheck == 4)
+        {
+            ChangeBgY(0, 0x2000, BG_COORD_ADD);
+            ChangeBgY(1, 0x2000, BG_COORD_ADD);
+            tIsScrolled = TRUE;
+            gTasks[tScrollArrowTaskId].tArrowTaskIsScrolled = TRUE;
+        }
         break;
     }
     gTasks[taskId].func = Task_WaitDma3AndFadeIn;
@@ -457,7 +541,7 @@ static void Task_ExecuteMainMenuSelection(u8 taskId)
                 break;
             }
             break;
-        case MAIN_MENU_MYSTERYGIFT:
+        case MAIN_MENU_MYSTERY_GIFT:
             switch (gTasks[taskId].tCursorPos)
             {
             default:
@@ -468,19 +552,15 @@ static void Task_ExecuteMainMenuSelection(u8 taskId)
                 menuAction = MAIN_MENU_NEWGAME;
                 break;
             case 2:
+                menuAction = MAIN_MENU_MYSTERY_GIFT;
                 if (!IsWirelessAdapterConnected())
                 {
-                    menuAction = MAIN_MENU_MYSTERYGIFTEREADER;
-                }
-                else
-                {
-                    menuAction = MAIN_MENU_MYSTERYGIFT;
+                    menuAction = ACTION_INVALID;
+                    gTasks[taskId].tMenuType = MAIN_MENU_NEWGAME;
                 }
                 break;
             case 3:
-                if (IsWirelessAdapterConnected())
-                {
-                    menuAction = ACTION_INVALID;
+                menuAction = MAIN_MENU_;
                     gTasks[taskId].tMenuType = MAIN_MENU_MYSTERYGIFT;
                 }
                 else
@@ -638,11 +718,23 @@ static bool8 HandleMenuInput(u8 taskId)
     }
     else if (JOY_NEW(DPAD_UP) && gTasks[taskId].tCursorPos > 0)
     {
+        if (gTasks[taskId].tMenuType == MAIN_MENU_MYSTERY_EVENTS && tIsScrolled == TRUE && gTasks[taskId].tCursorPos == 1)
+        {
+            ChangeBgY(0, 0x2000, 2);
+            ChangeBgY(1, 0x2000, 2);
+            gTasks[tScrollArrowTaskId].tArrowTaskIsScrolled = tIsScrolled = FALSE;
+        }
         gTasks[taskId].tCursorPos--;
         return TRUE;
     }
     else if (JOY_NEW(DPAD_DOWN) && gTasks[taskId].tCursorPos < sMenuCursorYMax[gTasks[taskId].tMenuType])
     {
+        if (gTasks[taskId].tMenuType == MAIN_MENU_MYSTERY_EVENTS && gTasks[taskId].tCursorPos == 3 && tIsScrolled == FALSE)
+        {
+            ChangeBgY(0, 0x2000, 1);
+            ChangeBgY(1, 0x2000, 1);
+            gTasks[tScrollArrowTaskId].tArrowTaskIsScrolled = tIsScrolled = TRUE;
+        }
         gTasks[taskId].tCursorPos++;
         return TRUE;
     }

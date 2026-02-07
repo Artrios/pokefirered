@@ -390,7 +390,7 @@ static void Task_PrintMainMenuText(u8 taskId)
         AddTextPrinterParameterized3(MAIN_MENU_WINDOW_NEWGAME, FONT_NORMAL, 2, 2, sTextColor1, -1, gText_NewGame);
         gTasks[taskId].tMGErrorType = 1;
         AddTextPrinterParameterized3(MAIN_MENU_WINDOW_MYSTERYGIFT, FONT_NORMAL, 2, 2, sTextColor1, -1, gText_MysteryGift);
-        AddTextPrinterParameterized3(MAIN_MENU_WINDOW_MYSTERYEVENT, FONT_NORMAL, 2, 2, sTextColor1, -1, gText_MysteryGift);
+        AddTextPrinterParameterized3(MAIN_MENU_WINDOW_MYSTERYEVENT, FONT_NORMAL, 2, 2, sTextColor1, -1, gText_MysteryEvent);
         PrintContinueStats();
         MainMenu_DrawWindow(&sWindowTemplate[MAIN_MENU_WINDOW_CONTINUE]);
         MainMenu_DrawWindow(&sWindowTemplate[MAIN_MENU_WINDOW_NEWGAME]);

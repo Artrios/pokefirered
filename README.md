@@ -1,18 +1,14 @@
 # Pokémon FireRed and LeafGreen
 
-[![Build Status][travis-badge]][travis]
+This branch adds full support for MYSTERY GIFT and MYSTERY EVENT and therefore the FireRed Battle-e cards as well.
 
-[travis]: https://travis-ci.org/pret/pokefirered
-[travis-badge]: https://travis-ci.org/pret/pokefirered.svg?branch=master
+To access them from the main menu you need to complete the questionaire in any PokeMart and answer it with "LINK TOGETHER WITH ALL" and "MYSTERY EVENT IS EXCITING".
 
-This is a disassembly of Pokémon FireRed and LeafGreen.
+Using MYSTERY GIFT without the Wireless Adapter will default to eReader mode so if using an emulator have a linked multiplayer window setup with the eReader ROM. Unfortunately there's no localised Battle-e cards that work with MYSTERY GIFT right now.
 
-It builds the following ROMs:
+Likewise there's no cards for MYSTERY EVENT either but these ones can be adapted from the RS Battle-e cards.
 
-* [**pokefirered.gba**](https://datomatic.no-intro.org/?page=show_record&s=23&n=1616) `sha1: 41cb23d8dccc8ebd7c649cd8fbb58eeace6e2fdc`
-* [**pokeleafgreen.gba**](https://datomatic.no-intro.org/?page=show_record&s=23&n=1617) `sha1: 574fa542ffebb14be69902d1d36f1ec0a4afd71e`
-* [**pokefirered_rev1.gba**](https://datomatic.no-intro.org/?page=show_record&s=23&n=1672) `sha1: dd5945db9b930750cb39d00c84da8571feebf417`
-* [**pokeleafgreen_rev1.gba**](https://datomatic.no-intro.org/index.php?page=show_record&s=23&n=1668) `sha1: 7862c67bdecbe21d1d69ce082ce34327e1c6ed5e`
+Unlocking both MYSTERY GIFT and MYSTERY EVENT creates too many options on the main menu so MYSTERY EVENT won't be visible but can still be selected if you move down below MYSTERY GIFT. I'll make the main menu scroll like in Emerald at some point to fix this issue.
 
 To set up the repository, see [INSTALL.md](INSTALL.md).
 

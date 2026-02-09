@@ -8955,13 +8955,13 @@ static const struct TrainerTowerFloor sTrainerTowerFloor_JP_1 = {
 	.prize = TTPRIZE_WHITE_HERB,
 	.trainers = {
 	    {
-			.name = _("SHOKICHI"),
+			.name = _("ANDRE"),
 			.facilityClass = FACILITY_CLASS_YOUNGSTER,
 			.textColor = 1,
-			.speechBefore = {0x0618, 0x100d, 0x0c07, 0x0817, 0x0803, 0x0c01},
-			.speechWin = {0x123c, 0x0a38, 0x0607, 0x0c0f, 0x122b, 0x0c01},
-			.speechLose = {0x1e03, 0x0c05, 0xffff, 0x1c27, 0x1c0a, 0x102c},
-			.speechAfter = {0x0e36, 0x0618, 0x121d, 0x0e1f, 0x140a, 0x1021},
+			.speechBefore = {EC_WORD_LET_S, EC_WORD_BATTLE, 0xffff, EC_WORD_HERE_I_COME, EC_WORD_EXCL_EXCL, 0xffff},
+			.speechWin    = {EC_WORD_YAY, EC_WORD_I, EC_WORD_WON, EC_WORD_THAT_WAS, EC_WORD_EXCITING, EC_WORD_EXCL_EXCL},
+			.speechLose   = {EC_WORD_WAAAH, EC_WORD_ELLIPSIS_EXCL, 0xffff, EC_WORD_SEEMS, EC_WORD_THAT_S_IT_EXCL, 0xffff},
+			.speechAfter  = {EC_WORD_TOO, EC_WORD_BUSY, EC_WORD_FOR, EC_WORD_ANOTHER, EC_WORD_BATTLE, EC_WORD_QUES},
 			.mons = {
 				{
 					.species = SPECIES_RATICATE,
@@ -9110,13 +9110,13 @@ static const struct TrainerTowerFloor sTrainerTowerFloor_JP_2 = {
 	.prize = TTPRIZE_HP_UP,
 	.trainers = {
 	    {
-			.name = _("MA & TO"),
+			.name = _("KIM & REID"),
 			.facilityClass = FACILITY_CLASS_YOUNG_COUPLE,
 			.textColor = 1,
-			.speechBefore = {0x2021, 0x020b, 0x101a, 0x062f, 0x0a04, 0x2021},
-			.speechWin = {0x0a47, 0x2021, 0x101a, 0x1004, 0x0c03, 0xffff},
-			.speechLose = {0x0c16, 0x0c06, 0xffff, 0x0a48, 0x062e, 0x1033},
-			.speechAfter = {0x1c27, 0x1c0d, 0x0e08, 0x0a04, 0x2021, 0x103e},
+			.speechBefore = {EC_WORD_A, EC_WORD_DEFEATED, EC_WORD_TRAINER, EC_WORD_BECOMES, EC_WORD_LOVEY_DOVEY, EC_WORD_EXCL},
+			.speechWin    = {EC_WORD_ARE, EC_WORD_YOU, EC_WORD_LOVEY_DOVEY, EC_WORD_FOR, EC_WORD_ME, EC_WORD_QUES},
+			.speechLose   = {EC_WORD_AWW, EC_WORD_ELLIPSIS, EC_WORD_SEEMS, EC_WORD_IT_S, EC_WORD_MY, EC_WORD_LOSS},
+			.speechAfter  = {EC_WORD_I_AM, EC_WORD_FEELING, EC_WORD_LOVEY_DOVEY, EC_WORD_FOR, EC_WORD_YOU, EC_WORD_EXCL},
 			.mons = {
 				{
 					.species = SPECIES_NONE,
@@ -9253,13 +9253,13 @@ static const struct TrainerTowerFloor sTrainerTowerFloor_JP_2 = {
 			}
 		},
 		{
-			.name = _("MA & TO"),
+			.name = _("KIM & REID"),
 			.facilityClass = FACILITY_CLASS_YOUNG_COUPLE,
 			.textColor = 1,
-			.speechBefore = {0x2021, 0x020b, 0x0e1d, 0x0e1b, 0x122f, 0x1019},
-			.speechWin = {0x1600, 0x201e, 0x2021, 0x020b, 0x102c, 0x0c05},
-			.speechLose = {0x0a1a, 0x0624, 0x0c01, 0x0630, 0x1205, 0x081a},
-			.speechAfter = { 0x123c, 0x2021, 0x020b, 0x1c27, 0x1c0a, 0x1017},
+			.speechBefore = {EC_WORD_IT_S, EC_WORD_TOUGH, EC_WORD_BEING, EC_WORD_A, EC_WORD_LOVEY_DOVEY, EC_WORD_TRAINER},
+			.speechWin = {EC_WORD_YOU_RE, EC_WORD_A, EC_WORD_LOVEY_DOVEY, EC_WORD_TRAINER, EC_WORD_TOO, EC_WORD_ELLIPSIS_EXCL},
+			.speechLose = {EC_WORD_YOU_RE, EC_WORD_A, EC_WORD_GENIUS, EC_WORD_I_AM, EC_WORD_HAPPY, EC_WORD_LOSING},
+			.speechAfter = {EC_WORD_YAY, EC_WORD_LOVEY_DOVEY, EC_WORD_TRAINER, EC_WORD_IT_S, EC_WORD_OVER, EC_WORD_HUH?},
 			.mons = {
 				{
 					.species = SPECIES_NONE,
@@ -9407,13 +9407,13 @@ static const struct TrainerTowerFloor sTrainerTowerFloor_JP_3 = {
 	.prize = TTPRIZE_HP_UP,
 	.trainers = {
 	    {
-			.name = _("JUNTA"),
+			.name = _("CARSON"),
 			.facilityClass = FACILITY_CLASS_CAMPER,
 			.textColor = 1,
-			.speechBefore = {0x0825, 0x0618, 0x100d, 0x1c13, 0x1404, 0x1021},
-			.speechWin = {0x1e03, 0x0618, 0x0e3a, 0x1c13, 0x1214, 0x1005},
-			.speechLose = {0x0c1e, 0x1c27, 0x1e10, 0x1c13, 0x1011, 0x0c04},
-			.speechAfter = {0x0e0e, 0x0818, 0x0c00, 0x1c13, 0x1227, 0x1005},
+			.speechBefore = {EC_WORD_GOT, EC_WORD_TIME, EC_WORD_TO, EC_WORD_BATTLE, EC_WORD_QUES, 0xffff},
+			.speechWin    = {EC_WORD_YOUR, EC_WORD_TIME, EC_WORD_IS, EC_WORD_UP, EC_WORD_EXCL, 0xffff},
+			.speechLose   = {EC_WORD_OH_QUES, EC_WORD_IS, EC_WORD_THAT, EC_WORD_THE, EC_WORD_TIME, EC_WORD_ELLIPSIS},
+			.speechAfter  = {EC_WORD_YOU_RE, EC_WORD_MAKING, EC_WORD_GOOD, EC_WORD_TIME, EC_WORD_EXCL, EC_WORD_GO_AHEAD},
 			.mons = {
 				{
 					.species = SPECIES_NONE,
@@ -9550,13 +9550,13 @@ static const struct TrainerTowerFloor sTrainerTowerFloor_JP_3 = {
 			}
 		},
 		{
-			.name = _("SHIHORI"),
+			.name = _("HARRIET"),
 			.facilityClass = FACILITY_CLASS_PICNICKER,
 			.textColor = 1,
-			.speechBefore = {0x0618, 0x1628, 0x0a35, 0x250a, 0x0c01, 0xffff},
-			.speechWin = {0x1e03, 0x0618, 0x0e3a, 0x1c13, 0x1214, 0x1005},
-			.speechLose = {0x0c1e, 0x1c27, 0x1e10, 0x1c13, 0x1011, 0x0c04},
-			.speechAfter = {0x0e0e, 0x0818, 0x0c00, 0x1c13, 0x1227, 0x1005},
+			.speechBefore = {EC_WORD_EVERY, EC_WORD_TRAINER, EC_WORD_EXCL, EC_WORD_COME_OVER, EC_WORD_HERE, EC_WORD_EXCL_EXCL},
+			.speechWin    = {EC_WORD_EVERY, EC_WORD_HAPPY, EC_WORD_WINNER, EC_WORD_COME_OVER, EC_WORD_HERE, EC_WORD_EXCL_EXCL},
+			.speechLose   = {EC_WORD_I, EC_WORD_WANT, EC_WORD_TO, EC_WORD_USE, EC_MOVE2(THRASH), EC_WORD_EXCL},
+			.speechAfter  = {EC_WORD_EVERY, EC_WORD_SAD, EC_WORD_LOSER, EC_WORD_COME_OVER, EC_WORD_HERE, EC_WORD_ELLIPSIS},
 			.mons = {
 				{
 					.species = SPECIES_NONE,
@@ -9693,13 +9693,13 @@ static const struct TrainerTowerFloor sTrainerTowerFloor_JP_3 = {
 			}
 		},
 		{
-			.name = _("HIBIKI"),
+			.name = _("AL"),
 			.facilityClass = FACILITY_CLASS_BIRD_KEEPER,
 			.textColor = 1,
-			.speechBefore = {0x0825, 0x0618, 0x100d, 0x1c13, 0x1404, 0x1021},
-			.speechWin = {0x1e03, 0x0618, 0x0e3a, 0x1c13, 0x1214, 0x1005},
-			.speechLose = {0x0c1e, 0x1c27, 0x1e10, 0x1c13, 0x1011, 0x0c04},
-			.speechAfter = {0x0e0e, 0x0818, 0x0c00, 0x1c13, 0x1227, 0x1005},
+			.speechBefore = {EC_WORD_I, EC_WORD_WILL, EC_WORD_WIN, EC_WORD_WITH, EC_MOVE2(FLY), EC_WORD_EXCL},
+			.speechWin    = {EC_WORD_WHY, EC_WORD_DON_T, EC_WORD_YOU, EC_WORD_TRY, EC_MOVE2(FLY), EC_WORD_QUES},
+			.speechLose   = {EC_WORD_WAAAH, EC_WORD_EXCL, EC_WORD_WHAT, EC_WORD_IS, EC_WORD_HAPPENING, EC_WORD_ELLIPSIS},
+			.speechAfter  = {EC_WORD_SEEMS, EC_WORD_MY, EC_WORD_POKEMON, EC_WORD_COULDN_T, EC_MOVE2(FLY), EC_WORD_ELLIPSIS},
 			.mons = {
 				{
 					.species = SPECIES_NONE,
@@ -9846,13 +9846,13 @@ static const struct TrainerTowerFloor sTrainerTowerFloor_JP_4 = {
 	.prize = TTPRIZE_HP_UP,
 	.trainers = {
 	    {
-			.name = _("YOSHINARI"),
+			.name = _("RUSSELL"),
 			.facilityClass = FACILITY_CLASS_TAMER,
 			.textColor = 7,
-			.speechBefore = {EC_WORD_AHAHA, EC_WORD_YOU_RE, EC_WORD_NOT, EC_WORD_GOING, EC_WORD_ANYWHERE, EC_WORD_EXCL},
-			.speechWin = {EC_WORD_ALL_RIGHT, EC_WORD_EXCL, EC_WORD_BYE_BYE, EC_WORD_EXCL, 0xFFFF, 0xFFFF},
-			.speechLose = {EC_WORD_HIYAH, EC_WORD_EXCL_EXCL, EC_WORD_DONE, EC_WORD_IN, EC_WORD_TOTALLY, EC_WORD_EXCL_EXCL},
-			.speechAfter = {EC_WORD_TCH, EC_WORD_TCH, EC_WORD_YOU_RE, EC_WORD_TOO_STRONG, 0xFFFF, 0xFFFF},
+			.speechBefore = {EC_WORD_THE, EC_WORD_LOSER, EC_WORD_HAS, EC_WORD_TO, EC_WORD_WALK, EC_WORD_UPSIDE_DOWN},
+			.speechWin    = {EC_WORD_WALKING, EC_WORD_UPSIDE_DOWN, EC_WORD_ISN_T, EC_WORD_SO, EC_WORD_EASY, EC_WORD_IS_IT_QUES},
+			.speechLose   = {EC_WORD_WHAT, EC_WORD_DID, EC_WORD_I, EC_WORD_AGREE, EC_WORD_TO, EC_WORD_QUES},
+			.speechAfter  = {EC_WORD_I, EC_WORD_CAN_T, EC_WORD_WALK, EC_WORD_UPSIDE_DOWN, EC_WORD_ELLIPSIS, 0xffff},
 			.mons = {
 				{
 					.species = SPECIES_NONE,

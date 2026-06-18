@@ -1,14 +1,10 @@
 # Pokémon FireRed and LeafGreen
 
-This branch adds full support for MYSTERY GIFT and MYSTERY EVENT and therefore the FireRed Battle-e cards as well.
+This branch localises the internal e-Reader multiboot program and adds full e-Reader support for MYSTERY GIFT to allow for the Pokémon Battle e FireRed & LeafGreen cards to be used. These modifications were made to reach feature parity with the JP version of the games.
 
-To access them from the main menu you need to complete the questionaire in any PokeMart and answer it with "LINK TOGETHER WITH ALL" and "MYSTERY EVENT IS EXCITING".
+To access MYSTERY GIFT from the main menu you need to complete the questionaire in any PokeMart and answer it with "LINK TOGETHER WITH ALL".
 
-Using MYSTERY GIFT without the Wireless Adapter will default to eReader mode so if using an emulator have a linked multiplayer window setup with the eReader ROM. Unfortunately there's no localised Battle-e cards that work with MYSTERY GIFT right now.
-
-Likewise there's no cards for MYSTERY EVENT either but these ones can be adapted from the RS Battle-e cards.
-
-Unlocking both MYSTERY GIFT and MYSTERY EVENT creates too many options on the main menu so MYSTERY EVENT won't be visible but can still be selected if you move down below MYSTERY GIFT. I'll make the main menu scroll like in Emerald at some point to fix this issue.
+Using MYSTERY GIFT without the Wireless Adapter will default to e-Reader mode so if using an emulator have a linked multiplayer window setup with the e-Reader ROM.
 
 To set up the repository, see [INSTALL.md](INSTALL.md).
 

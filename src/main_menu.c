@@ -25,7 +25,6 @@ enum MainMenuType
     MAIN_MENU_CONTINUE,
     MAIN_MENU_MYSTERYGIFT,
     MAIN_MENU_MYSTERYGIFTEREADER,
-    MAIN_MENU_MYSTERYEVENT,
     ACTION_INVALID
 };
 
@@ -35,7 +34,6 @@ enum MainMenuWindow
     MAIN_MENU_WINDOW_CONTINUE,
     MAIN_MENU_WINDOW_NEWGAME,
     MAIN_MENU_WINDOW_MYSTERYGIFT,
-    MAIN_MENU_WINDOW_MYSTERYEVENT,
     MAIN_MENU_WINDOW_ERROR,
     MAIN_MENU_WINDOW_COUNT
 };
@@ -113,15 +111,6 @@ static const struct WindowTemplate sWindowTemplate[] = {
         .paletteNum = 15,
         .baseBlock = 0x121
     },
-    [MAIN_MENU_WINDOW_MYSTERYEVENT] = {
-        .bg = 0,
-        .tilemapLeft = 3,
-        .tilemapTop = 21,
-        .width = 24,
-        .height = 2,
-        .paletteNum = 15,
-        .baseBlock = 0x155
-    }, 
     [MAIN_MENU_WINDOW_ERROR] = {
         .bg = 0,
         .tilemapLeft = 3,
@@ -150,7 +139,7 @@ static const struct BgTemplate sBgTemplate[] = {
     }
 };
 
-static const u8 sMenuCursorYMax[] = { 0, 1, 3 };
+static const u8 sMenuCursorYMax[] = { 0, 1, 2 };
 
 static void CB2_MainMenu(void)
 {
@@ -385,25 +374,20 @@ static void Task_PrintMainMenuText(u8 taskId)
         FillWindowPixelBuffer(MAIN_MENU_WINDOW_CONTINUE, PIXEL_FILL(10));
         FillWindowPixelBuffer(MAIN_MENU_WINDOW_NEWGAME, PIXEL_FILL(10));
         FillWindowPixelBuffer(MAIN_MENU_WINDOW_MYSTERYGIFT, PIXEL_FILL(10));
-        FillWindowPixelBuffer(MAIN_MENU_WINDOW_MYSTERYEVENT, PIXEL_FILL(10));
         AddTextPrinterParameterized3(MAIN_MENU_WINDOW_CONTINUE, FONT_NORMAL, 2, 2, sTextColor1, -1, gText_Continue);
         AddTextPrinterParameterized3(MAIN_MENU_WINDOW_NEWGAME, FONT_NORMAL, 2, 2, sTextColor1, -1, gText_NewGame);
         gTasks[taskId].tMGErrorType = 1;
         AddTextPrinterParameterized3(MAIN_MENU_WINDOW_MYSTERYGIFT, FONT_NORMAL, 2, 2, sTextColor1, -1, gText_MysteryGift);
-        AddTextPrinterParameterized3(MAIN_MENU_WINDOW_MYSTERYEVENT, FONT_NORMAL, 2, 2, sTextColor1, -1, gText_MysteryEvent);
         PrintContinueStats();
         MainMenu_DrawWindow(&sWindowTemplate[MAIN_MENU_WINDOW_CONTINUE]);
         MainMenu_DrawWindow(&sWindowTemplate[MAIN_MENU_WINDOW_NEWGAME]);
         MainMenu_DrawWindow(&sWindowTemplate[MAIN_MENU_WINDOW_MYSTERYGIFT]);
-        MainMenu_DrawWindow(&sWindowTemplate[MAIN_MENU_WINDOW_MYSTERYEVENT]);
         PutWindowTilemap(MAIN_MENU_WINDOW_CONTINUE);
         PutWindowTilemap(MAIN_MENU_WINDOW_NEWGAME);
         PutWindowTilemap(MAIN_MENU_WINDOW_MYSTERYGIFT);
-        PutWindowTilemap(MAIN_MENU_WINDOW_MYSTERYEVENT);
         CopyWindowToVram(MAIN_MENU_WINDOW_CONTINUE, COPYWIN_GFX);
         CopyWindowToVram(MAIN_MENU_WINDOW_NEWGAME, COPYWIN_GFX);
         CopyWindowToVram(MAIN_MENU_WINDOW_MYSTERYGIFT, COPYWIN_FULL);
-        CopyWindowToVram(MAIN_MENU_WINDOW_MYSTERYEVENT, COPYWIN_FULL);
         break;
     }
     gTasks[taskId].func = Task_WaitDma3AndFadeIn;
@@ -477,17 +461,6 @@ static void Task_ExecuteMainMenuSelection(u8 taskId)
                     menuAction = MAIN_MENU_MYSTERYGIFT;
                 }
                 break;
-            case 3:
-                if (IsWirelessAdapterConnected())
-                {
-                    menuAction = ACTION_INVALID;
-                    gTasks[taskId].tMenuType = MAIN_MENU_MYSTERYGIFT;
-                }
-                else
-                {
-                    menuAction = MAIN_MENU_MYSTERYEVENT;
-                }
-                break;
             }
             break;
         }
@@ -517,10 +490,6 @@ static void Task_ExecuteMainMenuSelection(u8 taskId)
             SetMainCallback2(CB2_InitEReader);
             HelpSystem_Disable();
             FreeAllWindowBuffers();
-            DestroyTask(taskId);
-            break;
-        case MAIN_MENU_MYSTERYEVENT:
-            SetMainCallback2(CB2_InitMysteryEventMenu);
             DestroyTask(taskId);
             break;
         case ACTION_INVALID:
